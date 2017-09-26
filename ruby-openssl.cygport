@@ -1,0 +1,31 @@
+inherit rubygem
+
+NAME="ruby-openssl"
+VERSION=2.0.5
+RELEASE=1
+CATEGORY="Ruby"
+SUMMARY="Ruby OpenSSL wrapper"
+DESCRIPTION="OpenSSL provides SSL, TLS and general purpose cryptography. This
+gem wraps the OpenSSL library."
+
+PKG_NAMES="${NAME} ${NAME}-doc"
+ruby_openssl_CONTENTS="
+	${RUBY_ARCH#/}
+	${RUBY_LIB#/}
+	${RUBYGEM_EXTDIR#/}
+	${RUBYGEM_INSTDIR#/}
+	${RUBYGEM_SPEC#/}
+"
+ruby_openssl_doc_CONTENTS=${RUBYGEM_DOCDIR#/}
+
+src_install() {
+	cd ${S}
+	rubygem_install
+
+	# This is required (wrapped) by other standard libraries
+	dodir ${RUBY_ARCH}
+	dosym ${RUBYGEM_EXTDIR}/openssl.so ${RUBY_ARCH}
+	dodir ${RUBY_LIB}
+	dosym ${RUBYGEM_INSTDIR}/lib/openssl.rb ${RUBY_LIB}
+	dosym ${RUBYGEM_INSTDIR}/lib/openssl ${RUBY_LIB}
+}
